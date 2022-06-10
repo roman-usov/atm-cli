@@ -24,7 +24,15 @@ module.exports = class Account {
 
   async #load() {
     this.#balance = parseFloat(await FileSystem.read(this.filePath));
-    console.log(this.balance);
+  }
+
+  async #updateBalance(amount) {
+    try {
+      await FileSystem.write(this.filePath, amount);
+      this.#balance = amount;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   static async find(accountName) {
@@ -54,12 +62,25 @@ module.exports = class Account {
 
   async deposit(amount) {
     const newAmount = this.#balance + amount;
+    return this.#updateBalance(newAmount);
 
-    try {
-      await FileSystem.write(this.filePath, newAmount);
-      this.#balance = newAmount;
-    } catch (err) {
-      console.error(err);
-    }
+    // try {
+    //   await FileSystem.write(this.filePath, newAmount);
+    //   this.#balance = newAmount;
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  }
+
+  async withdraw(amount) {
+    const newAmount = this.#balance - amount;
+    return this.#updateBalance(newAmount);
+
+    // try {
+    //   await FileSystem.write(this.filePath, newAmount);
+    //   this.#balance = newAmount;
+    // } catch (err) {
+    //   console.error(err);
+    // }
   }
 };

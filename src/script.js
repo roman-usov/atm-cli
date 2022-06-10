@@ -45,20 +45,39 @@ async function promptTask(account) {
     );
     await account.deposit(amount);
   }
+
+  if (taskResponse === 'withdraw') {
+    const amount = parseFloat(
+      await CommandLine.ask('How much would you like to withdraw?')
+    );
+
+    if (account.balance < amount) {
+      CommandLine.print(
+        `You don't have enough money on your account. The current balance is ${account.balance}.`
+      );
+      await promptTask(account);
+    } else {
+      await account.withdraw(amount);
+    }
+  }
+  CommandLine.print(`Your balance is ${account.balance}.`);
 }
 
 async function main() {
-  const { accountName, foundAccount } = await promptFindAccount();
+  try {
+    const { accountName, foundAccount } = await promptFindAccount();
 
-  let account = foundAccount;
+    let account = foundAccount;
 
-  if (account === null) {
-    account = await promptCreateAccount(accountName);
-    console.log(account);
-  }
+    if (account === null) {
+      account = await promptCreateAccount(accountName);
+    }
 
-  if (account !== null) {
-    await promptTask(account);
+    if (account !== null) {
+      await promptTask(account);
+    }
+  } catch (err) {
+    CommandLine.print('ERROR: Please, try again.');
   }
 }
 
