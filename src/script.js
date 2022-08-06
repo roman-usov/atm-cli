@@ -34,7 +34,7 @@ async function promptCreateAccount(accountName) {
   return null;
 }
 
-async function promptTask(account) {
+/* async function promptTask(account) {
   const taskResponse = await CommandLine.ask(
     'What would you like to do? (view/withdraw/deposit)?'
   );
@@ -61,6 +61,30 @@ async function promptTask(account) {
     }
   }
   CommandLine.print(`Your balance is ${account.balance}.`);
+} */
+
+async function promptTask(account) {
+  const response = await CommandLine.ask(
+    'What would you like to do? (view/deposit/withdraw)'
+  );
+
+  if (response === 'deposit') {
+    const amount = parseFloat(await CommandLine.ask('How much?'));
+
+    await account.deposit(amount);
+  } else if (response === 'withdraw') {
+    const amount = parseFloat(await CommandLine.ask('How much?'));
+
+    try {
+      await account.withdraw(amount);
+    } catch (e) {
+      CommandLine.print(
+        'We were unable to make the withdrawal. Please ensure you have enough money in your account.'
+      );
+    }
+  }
+
+  CommandLine.print(`Your balance is ${account.balance}`);
 }
 
 async function main() {

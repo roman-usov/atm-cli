@@ -5,6 +5,8 @@
   "main": "src/script.js",
   "scripts": {
     "test": "jest --coverage",
+    "test:unit": "jest \\.unit\\. --coverage",
+    "test:integration": "jest \\.integration\\. --coverage",
     "start": "parcel index.html",
     "build": "parcel build index.html --dist-dir ./dist",
     "lint": "eslint src/script.js"
@@ -12,7 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "@types/jest": "^28.1.6"
+  },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.2",

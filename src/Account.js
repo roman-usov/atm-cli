@@ -26,14 +26,14 @@ module.exports = class Account {
     this.#balance = parseFloat(await FileSystem.read(this.filePath));
   }
 
-  async #updateBalance(amount) {
-    try {
-      await FileSystem.write(this.filePath, amount);
-      this.#balance = amount;
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
+  // async #updateBalance(amount) {
+  //   try {
+  //     await FileSystem.write(this.filePath, amount);
+  //     this.#balance = amount;
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // }
 
   static async find(accountName) {
     const account = new Account(accountName);
@@ -62,25 +62,27 @@ module.exports = class Account {
 
   async deposit(amount) {
     const newAmount = this.#balance + amount;
-    return this.#updateBalance(newAmount);
+    // return this.#updateBalance(newAmount);
 
-    // try {
-    //   await FileSystem.write(this.filePath, newAmount);
-    //   this.#balance = newAmount;
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      await FileSystem.write(this.filePath, newAmount);
+      this.#balance = newAmount;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   async withdraw(amount) {
-    const newAmount = this.#balance - amount;
-    return this.#updateBalance(newAmount);
+    if (this.balance < amount) throw new Error();
 
-    // try {
-    //   await FileSystem.write(this.filePath, newAmount);
-    //   this.#balance = newAmount;
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    const newAmount = this.#balance - amount;
+    // return this.#updateBalance(newAmount);
+
+    try {
+      await FileSystem.write(this.filePath, newAmount);
+      this.#balance = newAmount;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 };
